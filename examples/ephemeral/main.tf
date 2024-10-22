@@ -23,7 +23,7 @@ module "runners" {
 
   prefix = local.environment
   tags = {
-    Project = "ProjectX"
+    Project = "IL-AWS-Runners"
   }
 
   github_app = {
@@ -36,20 +36,31 @@ module "runners" {
   # Alternatively you can set the path to the lambda zip files here.
   #
   # For example grab zip files via lambda_download
-  # webhook_lambda_zip                = "../lambdas-download/webhook.zip"
-  # runner_binaries_syncer_lambda_zip = "../lambdas-download/runner-binaries-syncer.zip"
-  # runners_lambda_zip                = "../lambdas-download/runners.zip"
+  webhook_lambda_zip                = "../lambdas-download/webhook.zip"
+  runner_binaries_syncer_lambda_zip = "../lambdas-download/runner-binaries-syncer.zip"
+  runners_lambda_zip                = "../lambdas-download/runners.zip"
 
   enable_organization_runners = true
-  runner_extra_labels         = ["default", "example"]
+  runner_extra_labels         = [ "ephemeral" ]
 
   # enable access to the runners via SSM
   enable_ssm_on_runners = true
 
+
+  block_device_mappings = [{
+    device_name           = "/dev/sda1"
+    delete_on_termination = true
+    volume_type           = "gp3"
+    volume_size           = 30
+    iops                  = null
+  }]
+
+  runner_run_as = "ubuntu"
+
   # Let the module manage the service linked role
   # create_service_linked_role_spot = true
 
-  instance_types = ["m5.large", "c5.large"]
+  instance_types = ["m7a.xlarge", "c7a.xlarge"]
 
   # override delay of events in seconds
   delay_webhook_event = 0
@@ -82,9 +93,9 @@ module "runners" {
 
 
   # configure your pre-built AMI
-  # enable_userdata = false
-  # ami_filter      = { name = ["github-runner-al2023-x86_64-*"], state = ["available"] }
-  # ami_owners      = [data.aws_caller_identity.current.account_id]
+  enable_userdata = false
+  ami_filter      = { name = ["github-runner-ubuntu-jammy-amd64-*"], state = ["available"] }
+  ami_owners      = ["682864570400"]
 
   # or use the default AMI
   # enable_userdata = true
