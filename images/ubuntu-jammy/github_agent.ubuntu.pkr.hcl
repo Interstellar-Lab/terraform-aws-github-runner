@@ -150,15 +150,16 @@ build {
       "sudo chmod 600 /swapfile",
       "sudo mkswap /swapfile",
       "sudo swapon /swapfile",
-      "echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab",
+      "echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab > /dev/null",
       "sudo apt-get -y update",
-      "sudo apt-get -y install ca-certificates curl gnupg lsb-release",
+      "sudo apt-get -y install ca-certificates curl gnupg lsb-release software-properties-common",
       "sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
       "echo deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
       "sudo curl -fsSLo /etc/apt/keyrings/githubcli-archive-keyring.gpg https://cli.github.com/packages/githubcli-archive-keyring.gpg",
       "echo deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null",
+      "sudo add-apt-repository --yes ppa:ansible/ansible",
       "sudo apt-get -y update",
-      "sudo apt-get -y install docker-ce docker-ce-cli containerd.io jq git unzip gh pipx",
+      "sudo apt-get -y install ansible docker-ce docker-ce-cli containerd.io jq git unzip gh python3-botocore python3-boto3",
       "sudo systemctl enable containerd.service",
       "sudo service docker start",
       "sudo usermod -a -G docker ubuntu",
@@ -168,6 +169,8 @@ build {
       "sudo curl -f https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip",
       "unzip awscliv2.zip",
       "sudo ./aws/install",
+      "sudo curl -f https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb -o session-manager-plugin.deb",
+      "sudo dpkg -i session-manager-plugin.deb",
     ], var.custom_shell_commands)
   }
 
