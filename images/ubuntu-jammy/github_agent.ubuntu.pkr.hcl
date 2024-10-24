@@ -159,7 +159,7 @@ build {
       "echo deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null",
       "sudo add-apt-repository --yes ppa:ansible/ansible",
       "sudo apt-get -y update",
-      "sudo apt-get -y install ansible docker-ce docker-ce-cli containerd.io jq git unzip gh python3-botocore python3-boto3",
+      "sudo apt-get -y install ansible docker-ce docker-ce-cli containerd.io jq git unzip gh python3-botocore python3-boto3 python3-venv",
       "sudo systemctl enable containerd.service",
       "sudo service docker start",
       "sudo usermod -a -G docker ubuntu",
