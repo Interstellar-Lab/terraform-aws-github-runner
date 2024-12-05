@@ -28,11 +28,7 @@ data "aws_iam_policy_document" "runner_cache_policy" {
   statement {
     principals {
       type = "AWS"
-      identifiers = concat(
-        var.config.runner_role_arns
-        # ,
-        # [aws_iam_role.oidc_role.arn]
-      )
+      identifiers = var.config.runner_role_arns
     }
 
     actions = ["s3:*"]
