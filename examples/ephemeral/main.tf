@@ -14,6 +14,18 @@ module "base" {
   aws_region = local.aws_region
 }
 
+module "s3_cache" {
+  source = "./s3_cache"
+
+  config = {
+    aws_region       = local.aws_region
+    prefix           = local.environment
+    runner_role_arns = [module.runners.runners.role_runner.arn]
+    tags             = { Project = "IL-AWS-Runners" }
+    vpc_id           = module.base.vpc.vpc_id
+  }
+}
+
 module "runners" {
   source                          = "../../"
   create_service_linked_role_spot = true
@@ -41,7 +53,7 @@ module "runners" {
   runners_lambda_zip                = "../lambdas-download/runners.zip"
 
   enable_organization_runners = true
-  runner_extra_labels         = [ "ephemeral" ]
+  runner_extra_labels         = ["ephemeral"]
 
   # enable access to the runners via SSM
   enable_ssm_on_runners = true
