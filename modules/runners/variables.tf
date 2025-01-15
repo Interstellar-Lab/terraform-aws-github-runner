@@ -172,6 +172,18 @@ variable "userdata_post_install" {
   default     = ""
 }
 
+variable "runner_hook_job_started" {
+  description = "Script to be ran in the runner environment at the beginning of every job"
+  type        = string
+  default     = ""
+}
+
+variable "runner_hook_job_completed" {
+  description = "Script to be ran in the runner environment at the end of every job"
+  type        = string
+  default     = ""
+}
+
 variable "sqs_build_queue" {
   description = "SQS queue to consume accepted build events."
   type = object({
@@ -215,6 +227,12 @@ variable "runner_boot_time_in_minutes" {
   description = "The minimum time for an EC2 runner to boot and register as a runner."
   type        = number
   default     = 5
+}
+
+variable "runner_disable_default_labels" {
+  description = "Disable default labels for the runners (os, architecture and `self-hosted`). If enabled, the runner will only have the extra labels provided in `runner_extra_labels`."
+  type        = bool
+  default     = false
 }
 
 variable "runner_labels" {
@@ -557,7 +575,7 @@ variable "disable_runner_autoupdate" {
 variable "lambda_runtime" {
   description = "AWS Lambda runtime."
   type        = string
-  default     = "nodejs20.x"
+  default     = "nodejs22.x"
 }
 
 variable "lambda_architecture" {

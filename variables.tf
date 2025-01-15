@@ -9,7 +9,7 @@ variable "vpc_id" {
 }
 
 variable "subnet_ids" {
-  description = "List of subnets in which the action runner instances will be launched. The subnets need to exist in the configured VPC (`vpc_id`), and must reside in different availability zones (see https://github.com/philips-labs/terraform-aws-github-runner/issues/2904)"
+  description = "List of subnets in which the action runner instances will be launched. The subnets need to exist in the configured VPC (`vpc_id`), and must reside in different availability zones (see https://github.com/github-aws-runners/terraform-aws-github-runner/issues/2904)"
   type        = list(string)
 }
 
@@ -58,10 +58,21 @@ variable "runner_boot_time_in_minutes" {
   default     = 5
 }
 
+variable "runner_disable_default_labels" {
+  description = "Disable default labels for the runners (os, architecture and `self-hosted`). If enabled, the runner will only have the extra labels provided in `runner_extra_labels`. In case you on own start script is used, this configuration parameter needs to be parsed via SSM."
+  type        = bool
+  default     = false
+}
+
 variable "runner_extra_labels" {
-  description = "Extra (custom) labels for the runners (GitHub). Labels checks on the webhook can be enforced by setting `enable_runner_workflow_job_labels_check_all`. GitHub read-only labels should not be provided."
+  description = "Extra (custom) labels for the runners (GitHub). Separate each label by a comma. Labels checks on the webhook can be enforced by setting `enable_workflow_job_labels_check`. GitHub read-only labels should not be provided."
   type        = list(string)
   default     = []
+
+  validation {
+    condition     = var.runner_extra_labels != null
+    error_message = "Extra labels should not be null."
+  }
 }
 
 variable "runner_group_name" {
@@ -267,6 +278,18 @@ variable "userdata_post_install" {
   type        = string
   default     = ""
   description = "Script to be ran after the GitHub Actions runner is installed on the EC2 instances"
+}
+
+variable "runner_hook_job_started" {
+  type        = string
+  default     = ""
+  description = "Script to be ran in the runner environment at the beginning of every job"
+}
+
+variable "runner_hook_job_completed" {
+  type        = string
+  default     = ""
+  description = "Script to be ran in the runner environment at the end of every job"
 }
 
 variable "idle_config" {
@@ -629,12 +652,6 @@ variable "lambda_principals" {
   default = []
 }
 
-variable "enable_fifo_build_queue" {
-  description = "Enable a FIFO queue to keep the order of events received by the webhook. Recommended for repo level runners."
-  type        = bool
-  default     = false
-}
-
 variable "redrive_build_queue" {
   description = "Set options to attach (optional) a dead letter queue to the build queue, the queue between the webhook and the scale up lambda. You have the following options. 1. Disable by setting `enabled` to false. 2. Enable by setting `enabled` to `true`, `maxReceiveCount` to a number of max retries."
   type = object({
@@ -710,7 +727,7 @@ variable "disable_runner_autoupdate" {
 variable "lambda_runtime" {
   description = "AWS Lambda runtime."
   type        = string
-  default     = "nodejs20.x"
+  default     = "nodejs22.x"
 }
 
 variable "lambda_architecture" {
@@ -723,25 +740,6 @@ variable "lambda_architecture" {
   }
 }
 
-variable "enable_workflow_job_events_queue" {
-  description = "Enabling this experimental feature will create a secondory sqs queue to which a copy of the workflow_job event will be delivered."
-  type        = bool
-  default     = false
-}
-
-variable "workflow_job_queue_configuration" {
-  description = "Configuration options for workflow job queue which is only applicable if the flag enable_workflow_job_events_queue is set to true."
-  type = object({
-    delay_seconds              = number
-    visibility_timeout_seconds = number
-    message_retention_seconds  = number
-  })
-  default = {
-    "delay_seconds" : null,
-    "visibility_timeout_seconds" : null,
-    "message_retention_seconds" : null
-  }
-}
 variable "enable_runner_binaries_syncer" {
   description = "Option to disable the lambda to sync GitHub runner distribution, useful when using a pre-build AMI."
   type        = bool
@@ -890,8 +888,7 @@ variable "instance_termination_watcher" {
   EOF
 
   type = object({
-    enable        = optional(bool, false)
-    enable_metric = optional(string, null) # deprectaed
+    enable = optional(bool, false)
     features = optional(object({
       enable_spot_termination_handler              = optional(bool, true)
       enable_spot_termination_notification_watcher = optional(bool, true)
@@ -904,10 +901,6 @@ variable "instance_termination_watcher" {
   })
   default = {}
 
-  validation {
-    condition     = var.instance_termination_watcher.enable_metric == null
-    error_message = "The variable `instance_termination_watcher.enable_metric` is deprecated, use `metrics` instead."
-  }
 }
 
 variable "runners_ebs_optimized" {
@@ -942,5 +935,20 @@ variable "job_retry" {
     lambda_timeout     = optional(number, 30)
     max_attempts       = optional(number, 1)
   })
+  default = {}
+}
+
+variable "eventbridge" {
+  description = <<EOF
+    Enable the use of EventBridge by the module. By enabling this feature events will be put on the EventBridge by the webhook instead of directly dispatching to queues for scaling.
+
+    `enable`: Enable the EventBridge feature.
+    `accept_events`: List can be used to only allow specific events to be putted on the EventBridge. By default all events, empty list will be be interpreted as all events.
+EOF
+  type = object({
+    enable        = optional(bool, true)
+    accept_events = optional(list(string), null)
+  })
+
   default = {}
 }

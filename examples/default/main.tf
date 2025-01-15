@@ -84,21 +84,27 @@ module "runners" {
   delay_webhook_event   = 5
   runners_maximum_count = 2
 
-  # set up a fifo queue to remain order
-  enable_fifo_build_queue = true
-
   # override scaling down
   scale_down_schedule_expression = "cron(* * * * ? *)"
-  # enable this flag to publish webhook events to workflow job queue
-  # enable_workflow_job_events_queue  = true
 
   enable_user_data_debug_logging_runner = true
 
   # prefix GitHub runners with the environment name
   runner_name_prefix = "${local.environment}_"
 
+  # by default eventbridge is used, see multi-runner example. Here we disable the eventbridge
+  eventbridge = {
+    enable = false
+  }
+
   # Enable debug logging for the lambda functions
-  log_level = "info"
+  # log_level = "debug"
+
+  # tracing_config = {
+  #   mode                  = "Active"
+  #   capture_error         = true
+  #   capture_http_requests = true
+  # }
 
   enable_ami_housekeeper = true
   ami_housekeeper_cleanup_config = {

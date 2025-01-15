@@ -38,18 +38,14 @@ output "webhook" {
     lambda_log_group = module.webhook.lambda_log_group
     lambda_role      = module.webhook.role
     endpoint         = "${module.webhook.gateway.api_endpoint}/${module.webhook.endpoint_relative_path}"
+    webhook          = module.webhook.webhook
+    dispatcher       = var.eventbridge.enable ? module.webhook.dispatcher : null
+    eventbridge      = var.eventbridge.enable ? module.webhook.eventbridge : null
   }
 }
 
 output "ssm_parameters" {
   value = module.ssm.parameters
-}
-
-output "queues" {
-  description = "SQS queues."
-  value = {
-    webhook_workflow_job_queue = try(aws_sqs_queue.webhook_events_workflow_job_queue[*].arn, "")
-  }
 }
 
 output "instance_termination_watcher" {

@@ -2,22 +2,23 @@ import { createChildLogger } from '@aws-github-runner/aws-powertools-util';
 import { WorkflowJobEvent } from '@octokit/webhooks-types';
 
 import { Response } from '../lambda';
-import { RunnerMatcherConfig, sendActionRequest, sendWebhookEventToWorkflowJobQueue } from '../sqs';
-import { Config } from '../ConfigResolver';
+import { RunnerMatcherConfig, sendActionRequest } from '../sqs';
 import ValidationError from '../ValidationError';
+import { ConfigDispatcher, ConfigWebhook } from '../ConfigLoader';
 
 const logger = createChildLogger('handler');
 
-export async function dispatch(event: WorkflowJobEvent, eventType: string, config: Config): Promise<Response> {
+export async function dispatch(
+  event: WorkflowJobEvent,
+  eventType: string,
+  config: ConfigDispatcher | ConfigWebhook,
+): Promise<Response> {
   validateRepoInAllowList(event, config);
 
-  const result = await handleWorkflowJob(event, eventType, Config.matcherConfig!);
-  await sendWebhookEventToWorkflowJobQueue({ workflowJobEvent: event }, config);
-
-  return result;
+  return await handleWorkflowJob(event, eventType, config.matcherConfig!);
 }
 
-function validateRepoInAllowList(event: WorkflowJobEvent, config: Config) {
+function validateRepoInAllowList(event: WorkflowJobEvent, config: ConfigDispatcher) {
   if (config.repositoryAllowList.length > 0 && !config.repositoryAllowList.includes(event.repository.full_name)) {
     logger.info(`Received event from unauthorized repository ${event.repository.full_name}`);
     throw new ValidationError(403, `Received event from unauthorized repository ${event.repository.full_name}`);
@@ -43,7 +44,6 @@ async function handleWorkflowJob(
           eventType: githubEvent,
           installationId: body.installation?.id ?? 0,
           queueId: queue.id,
-          queueFifo: queue.fifo,
           repoOwnerType: body.repository.owner.type,
         });
         logger.info(`Successfully dispatched job for ${body.repository.full_name} to the queue ${queue.id}`);

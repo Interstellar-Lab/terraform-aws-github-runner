@@ -8,21 +8,22 @@ import runnerConfig from '../../test/resources/multi_runner_configurations.json'
 
 import { RunnerConfig, sendActionRequest } from '../sqs';
 import { canRunJob, dispatch } from './dispatch';
-import { Config } from '../ConfigResolver';
+import { ConfigDispatcher } from '../ConfigLoader';
+import { logger } from '@aws-github-runner/aws-powertools-util';
 
 jest.mock('../sqs');
 jest.mock('@aws-github-runner/aws-ssm-util');
 
-const sendWebhookEventToWorkflowJobQueueMock = jest.mocked(sendActionRequest);
 const GITHUB_APP_WEBHOOK_SECRET = 'TEST_SECRET';
 
 const cleanEnv = process.env;
 
 describe('Dispatcher', () => {
   let originalError: Console['error'];
-  let config: Config;
+  let config: ConfigDispatcher;
 
   beforeEach(async () => {
+    logger.setLogLevel('DEBUG');
     process.env = { ...cleanEnv };
 
     nock.disableNetConnect();
@@ -54,25 +55,22 @@ describe('Dispatcher', () => {
         statusCode: 403,
       });
       expect(sendActionRequest).not.toHaveBeenCalled();
-      expect(sendWebhookEventToWorkflowJobQueueMock).not.toHaveBeenCalled();
     });
 
     it('should handle workflow_job events without installation id', async () => {
-      config = await createConfig(['philips-labs/terraform-aws-github-runner']);
+      config = await createConfig(['github-aws-runners/terraform-aws-github-runner']);
       const event = { ...workFlowJobEvent, installation: null } as unknown as WorkflowJobEvent;
       const resp = await dispatch(event, 'workflow_job', config);
       expect(resp.statusCode).toBe(201);
       expect(sendActionRequest).toHaveBeenCalled();
-      expect(sendWebhookEventToWorkflowJobQueueMock).toHaveBeenCalled();
     });
 
     it('should handle workflow_job events from allow listed repositories', async () => {
-      config = await createConfig(['philips-labs/terraform-aws-github-runner']);
+      config = await createConfig(['github-aws-runners/terraform-aws-github-runner']);
       const event = workFlowJobEvent as unknown as WorkflowJobEvent;
       const resp = await dispatch(event, 'workflow_job', config);
       expect(resp.statusCode).toBe(201);
       expect(sendActionRequest).toHaveBeenCalled();
-      expect(sendWebhookEventToWorkflowJobQueueMock).toHaveBeenCalled();
     });
 
     it('should match labels', async () => {
@@ -103,10 +101,8 @@ describe('Dispatcher', () => {
         eventType: 'workflow_job',
         installationId: 0,
         queueId: runnerConfig[0].id,
-        queueFifo: false,
         repoOwnerType: 'Organization',
       });
-      expect(sendWebhookEventToWorkflowJobQueueMock).toHaveBeenCalled();
     });
 
     it('should sort matcher with exact first.', async () => {
@@ -152,10 +148,8 @@ describe('Dispatcher', () => {
         eventType: 'workflow_job',
         installationId: 0,
         queueId: 'match',
-        queueFifo: false,
         repoOwnerType: 'Organization',
       });
-      expect(sendWebhookEventToWorkflowJobQueueMock).toHaveBeenCalled();
     });
 
     it('should not accept jobs where not all labels are supported (single matcher).', async () => {
@@ -179,7 +173,6 @@ describe('Dispatcher', () => {
       const resp = await dispatch(event, 'workflow_job', config);
       expect(resp.statusCode).toBe(202);
       expect(sendActionRequest).not.toHaveBeenCalled();
-      expect(sendWebhookEventToWorkflowJobQueueMock).not.toHaveBeenCalled();
     });
   });
 
@@ -235,6 +228,7 @@ describe('Dispatcher', () => {
 });
 
 function mockSSMResponse(runnerConfigInput?: RunnerConfig) {
+  process.env.PARAMETER_RUNNER_MATCHER_CONFIG_PATH = '/github-runner/runner-matcher-config';
   const mockedGet = mocked(getParameter);
   mockedGet.mockImplementation((parameter_name) => {
     const value =
@@ -245,11 +239,11 @@ function mockSSMResponse(runnerConfigInput?: RunnerConfig) {
   });
 }
 
-async function createConfig(repositoryAllowList?: string[], runnerConfig?: RunnerConfig): Promise<Config> {
+async function createConfig(repositoryAllowList?: string[], runnerConfig?: RunnerConfig): Promise<ConfigDispatcher> {
   if (repositoryAllowList) {
     process.env.REPOSITORY_ALLOW_LIST = JSON.stringify(repositoryAllowList);
   }
-  Config.reset();
+  ConfigDispatcher.reset();
   mockSSMResponse(runnerConfig);
-  return await Config.load();
+  return await ConfigDispatcher.load();
 }

@@ -61,6 +61,7 @@ variable "multi_runner_config" {
       pool_runner_owner                       = optional(string, null)
       runner_as_root                          = optional(bool, false)
       runner_boot_time_in_minutes             = optional(number, 5)
+      runner_disable_default_labels           = optional(bool, false)
       runner_extra_labels                     = optional(list(string), [])
       runner_group_name                       = optional(string, "Default")
       runner_name_prefix                      = optional(string, "")
@@ -77,6 +78,8 @@ variable "multi_runner_config" {
       cloudwatch_config                       = optional(string, null)
       userdata_pre_install                    = optional(string, "")
       userdata_post_install                   = optional(string, "")
+      runner_hook_job_started                 = optional(string, "")
+      runner_hook_job_completed               = optional(string, "")
       runner_ec2_tags                         = optional(map(string), {})
       runner_iam_role_managed_policy_arns     = optional(list(string), [])
       vpc_id                                  = optional(string, null)
@@ -125,7 +128,6 @@ variable "multi_runner_config" {
       exactMatch    = optional(bool, false)
       priority      = optional(number, 999)
     })
-    fifo = optional(bool, false)
     redrive_build_queue = optional(object({
       enabled         = bool
       maxReceiveCount = number
@@ -164,6 +166,7 @@ variable "multi_runner_config" {
         runner_additional_security_group_ids: "List of additional security groups IDs to apply to the runner. If added outside the multi_runner_config block, the additional security group(s) will be applied to all runner configs. If added inside the multi_runner_config, the additional security group(s) will be applied to the individual runner."
         runner_as_root: "Run the action runner under the root user. Variable `runner_run_as` will be ignored."
         runner_boot_time_in_minutes: "The minimum time for an EC2 runner to boot and register as a runner."
+        runner_disable_default_labels: "Disable default labels for the runners (os, architecture and `self-hosted`). If enabled, the runner will only have the extra labels provided in `runner_extra_labels`. In case you on own start script is used, this configuration parameter needs to be parsed via SSM."
         runner_extra_labels: "Extra (custom) labels for the runners (GitHub). Separate each label by a comma. Labels checks on the webhook can be enforced by setting `multi_runner_config.matcherConfig.exactMatch`. GitHub read-only labels should not be provided."
         runner_group_name: "Name of the runner group."
         runner_name_prefix: "Prefix for the GitHub runner name."
@@ -178,6 +181,8 @@ variable "multi_runner_config" {
         cloudwatch_config: "(optional) Replaces the module default cloudwatch log config. See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-Configuration-File-Details.html for details."
         userdata_pre_install: "Script to be ran before the GitHub Actions runner is installed on the EC2 instances"
         userdata_post_install: "Script to be ran after the GitHub Actions runner is installed on the EC2 instances"
+        runner_hook_job_started: "Script to be ran in the runner environment at the beginning of every job"
+        runner_hook_job_completed: "Script to be ran in the runner environment at the end of every job"
         runner_ec2_tags: "Map of tags that will be added to the launch template instance tag specifications."
         runner_iam_role_managed_policy_arns: "Attach AWS or customer-managed IAM policies (by ARN) to the runner IAM role"
         vpc_id: "The VPC for security groups of the action runners. If not set uses the value of `var.vpc_id`."
@@ -193,7 +198,6 @@ variable "multi_runner_config" {
         exactMatch: "If set to true all labels in the workflow job must match the GitHub labels (os, architecture and `self-hosted`). When false if __any__ workflow label matches it will trigger the webhook."
         priority: "If set it defines the priority of the matcher, the matcher with the lowest priority will be evaluated first. Default is 999, allowed values 0-999."
       }
-      fifo: "Enable a FIFO queue to remain the order of events received by the webhook. Suggest to set to true for repo level runners."
       redrive_build_queue: "Set options to attach (optional) a dead letter queue to the build queue, the queue between the webhook and the scale up lambda. You have the following options. 1. Disable by setting `enabled` to false. 2. Enable by setting `enabled` to `true`, `maxReceiveCount` to a number of max retries."
     }
   EOT
@@ -319,7 +323,7 @@ variable "log_level" {
 variable "lambda_runtime" {
   description = "AWS Lambda runtime."
   type        = string
-  default     = "nodejs20.x"
+  default     = "nodejs22.x"
 }
 
 variable "lambda_architecture" {
@@ -550,26 +554,6 @@ variable "pool_lambda_reserved_concurrent_executions" {
   default     = 1
 }
 
-variable "enable_workflow_job_events_queue" {
-  description = "Enabling this experimental feature will create a secondory sqs queue to which a copy of the workflow_job event will be delivered."
-  type        = bool
-  default     = false
-}
-
-variable "workflow_job_queue_configuration" {
-  description = "Configuration options for workflow job queue which is only applicable if the flag enable_workflow_job_events_queue is set to true."
-  type = object({
-    delay_seconds              = number
-    visibility_timeout_seconds = number
-    message_retention_seconds  = number
-  })
-  default = {
-    "delay_seconds" : null,
-    "visibility_timeout_seconds" : null,
-    "message_retention_seconds" : null
-  }
-}
-
 variable "ssm_paths" {
   description = "The root path used in SSM to store configuration and secreets."
   type = object({
@@ -634,8 +618,7 @@ variable "instance_termination_watcher" {
   EOF
 
   type = object({
-    enable         = optional(bool, false)
-    enable_metrics = optional(string, null) # deprecated
+    enable = optional(bool, false)
     features = optional(object({
       enable_spot_termination_handler              = optional(bool, true)
       enable_spot_termination_notification_watcher = optional(bool, true)
@@ -647,11 +630,6 @@ variable "instance_termination_watcher" {
     zip               = optional(string, null)
   })
   default = {}
-
-  validation {
-    condition     = var.instance_termination_watcher.enable_metrics == null
-    error_message = "The feature `instance_termination_watcher` is deprecated and will be removed in a future release. Please use the `termination_watcher` variable instead."
-  }
 }
 
 variable "lambda_tags" {
@@ -681,5 +659,15 @@ variable "metrics" {
       enable_spot_termination_warning = optional(bool, true)
     }), {})
   })
+  default = {}
+}
+
+variable "eventbridge" {
+  description = "Enable the use of EventBridge by the module. By enabling this feature events will be put on the EventBridge by the webhook instead of directly dispatching to queues for scaling."
+  type = object({
+    enable        = optional(bool, true)
+    accept_events = optional(list(string), [])
+  })
+
   default = {}
 }

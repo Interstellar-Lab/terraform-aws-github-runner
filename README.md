@@ -1,14 +1,12 @@
 # Terraform module Self-Hosted Scalable GitHub Actions runners on AWS.
 
-[![docs](https://img.shields.io/badge/docs-runners-blue.svg)](https://philips-labs.github.io/terraform-aws-github-runner) [![awesome-runners](https://img.shields.io/badge/listed%20on-awesome--runners-blue.svg)](https://github.com/jonico/awesome-runners) [![Terraform registry](https://img.shields.io/github/v/release/philips-labs/terraform-aws-github-runner?label=Terraform%20Registry)](https://registry.terraform.io/modules/philips-labs/github-runner/aws/) [![Terraform checks](https://github.com/philips-labs/terraform-aws-github-runner/actions/workflows/terraform.yml/badge.svg)](https://github.com/philips-labs/terraform-aws-github-runner/actions/workflows/terraform.yml) [![Lambdas](https://github.com/philips-labs/terraform-aws-github-runner/actions/workflows/lambda.yml/badge.svg)](https://github.com/philips-labs/terraform-aws-github-runner/actions/workflows/lambda.yml)
+[![docs](https://img.shields.io/badge/docs-runners-blue.svg)](https://github-aws-runners.github.io/terraform-aws-github-runner) [![awesome-runners](https://img.shields.io/badge/listed%20on-awesome--runners-blue.svg)](https://github.com/jonico/awesome-runners) [![Terraform registry](https://img.shields.io/github/v/release/github-aws-runners/terraform-aws-github-runner?label=Terraform%20Registry)](https://registry.terraform.io/modules/github-aws-runners/github-runner/aws/) [![Terraform checks](https://github.com/github-aws-runners/terraform-aws-github-runner/actions/workflows/terraform.yml/badge.svg)](https://github.com/github-aws-runners/terraform-aws-github-runner/actions/workflows/terraform.yml) [![Lambdas](https://github.com/github-aws-runners/terraform-aws-github-runner/actions/workflows/lambda.yml/badge.svg)](https://github.com/github-aws-runners/terraform-aws-github-runner/actions/workflows/lambda.yml)
 
-> 📄 Extensive documentation is available via our [GitHub Pages Docs site](https://philips-labs.github.io/terraform-aws-github-runner/).
+> 📢 We're moving `terraform-aws-github-runner` to a new organization https://github.com/github-aws-runners in January to foster growth and community ownership! 🎉 Join us on our new [Discord server](https://discord.gg/bxgXW8jJGh) for discussions and updates. Please see #4298 for more details.
+
+> 📄 Extensive documentation is available via our [GitHub Pages Docs site](https://github-aws-runners.github.io/terraform-aws-github-runner/).
 
 > 📢 We maintain the project as a truly open-source project. We maintain the project on a best effort basis. We welcome contributions from the community. Feel free to help us answering issues, reviewing PRs, or maintaining and improving the project.
-
-> 📢 [`v5`](https://github.com/philips-labs/terraform-aws-github-runner/pull/3552) replaces Amazon Linux 2 with Amazon Linux 2023 as default OS. Check the PR for more details and other changes.
-
-> 📢 For contributions to older versions you can make a PR to the related branch, e.g. `v4`. We have no release process in place for older versions.
 
 This [Terraform](https://www.terraform.io/) module creates the required infrastructure needed to host [GitHub Actions](https://github.com/features/actions) self-hosted, auto-scaling runners on [AWS spot instances](https://aws.amazon.com/ec2/spot/). It provides the required logic to handle the life cycle for scaling up and down using a set of AWS Lambda functions. Runners are scaled down to zero to avoid costs when no workflows are active.
 
@@ -33,7 +31,7 @@ This [Terraform](https://www.terraform.io/) module creates the required infrastr
 
 ## Getting started
 
-Check out the detailed instructions in the [Getting Started](https://philips-labs.github.io/terraform-aws-github-runner/getting-started/) section of the docs. On a high level, the following steps are required to get started:
+Check out the detailed instructions in the [Getting Started](https://github-aws-runners.github.io/terraform-aws-github-runner/getting-started/) section of the docs. On a high level, the following steps are required to get started:
 - Setup your AWS account
 - Create and configure a GitHub App
 - Download or build the required lambdas
@@ -44,7 +42,11 @@ Check out the provided Terraform examples in the [examples](./examples) director
 
 ## Configuration
 
-Please check the [configuration](https://philips-labs.github.io/terraform-aws-github-runner/configuration/) section of the docs for major configuration options. See the Terraform module documentation for all available options.
+Please check the [configuration](https://github-aws-runners.github.io/terraform-aws-github-runner/configuration/) section of the docs for major configuration options. See the Terraform module documentation for all available options.
+
+## Acknowledgements
+
+This repository was originally founded and maintained by Philips Labs. We gratefully acknowledge their initial contributions and stewardship of this project. You can find the original repository here: [https://github.com/philips-labs/terraform-aws-github-runner](https://github.com/philips-labs/terraform-aws-github-runner)
 
 ## License
 
@@ -54,24 +56,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) f
 
 We welcome contributions, please check out the [contribution guide](CONTRIBUTING.md). Be aware we use [pre commit hooks](https://pre-commit.com/) to update the docs.
 
-## Philips Forest
+## Join the community
 
-This module is part of the Philips Forest.
-
-```plain
-                                                     ___                   _
-                                                    / __\__  _ __ ___  ___| |_
-                                                   / _\/ _ \| '__/ _ \/ __| __|
-                                                  / / | (_) | | |  __/\__ \ |_
-                                                  \/   \___/|_|  \___||___/\__|
-
-                                                                 Infrastructure
-```
-
-Talk to the forestkeepers in the `runners-channel` on Slack.
-
-[![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/philips-software/shared_invite/zt-xecw65v5-i1531hGP~mdVwgxLFx7ckg)
-
+Join our discord community via [this invite link](https://discord.gg/bxgXW8jJGh))
 
 <details>
 <summary>Terraform root module documention</summary>
@@ -83,15 +70,15 @@ Talk to the forestkeepers in the `runners-channel` on Slack.
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.27 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.77 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.31.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.6.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 5.77 |
+| <a name="provider_random"></a> [random](#provider\_random) | ~> 3.0 |
 
 ## Modules
 
@@ -110,10 +97,8 @@ Talk to the forestkeepers in the `runners-channel` on Slack.
 |------|------|
 | [aws_sqs_queue.queued_builds](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue) | resource |
 | [aws_sqs_queue.queued_builds_dlq](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue) | resource |
-| [aws_sqs_queue.webhook_events_workflow_job_queue](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue) | resource |
 | [aws_sqs_queue_policy.build_queue_dlq_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue_policy) | resource |
 | [aws_sqs_queue_policy.build_queue_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue_policy) | resource |
-| [aws_sqs_queue_policy.webhook_events_workflow_job_queue_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue_policy) | resource |
 | [random_string.random](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [aws_iam_policy_document.deny_unsecure_transport](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 
@@ -142,12 +127,9 @@ Talk to the forestkeepers in the `runners-channel` on Slack.
 | <a name="input_enable_ami_housekeeper"></a> [enable\_ami\_housekeeper](#input\_enable\_ami\_housekeeper) | Option to disable the lambda to clean up old AMIs. | `bool` | `false` | no |
 | <a name="input_enable_cloudwatch_agent"></a> [enable\_cloudwatch\_agent](#input\_enable\_cloudwatch\_agent) | Enables the cloudwatch agent on the ec2 runner instances. The runner uses a default config that can be overridden via `cloudwatch_config`. | `bool` | `true` | no |
 | <a name="input_enable_ephemeral_runners"></a> [enable\_ephemeral\_runners](#input\_enable\_ephemeral\_runners) | Enable ephemeral runners, runners will only be used once. | `bool` | `false` | no |
-| <a name="input_enable_event_rule_binaries_syncer"></a> [enable\_event\_rule\_binaries\_syncer](#input\_enable\_event\_rule\_binaries\_syncer) | DEPRECATED: Replaced by `state_event_rule_binaries_syncer`. | `bool` | `null` | no |
-| <a name="input_enable_fifo_build_queue"></a> [enable\_fifo\_build\_queue](#input\_enable\_fifo\_build\_queue) | Enable a FIFO queue to keep the order of events received by the webhook. Recommended for repo level runners. | `bool` | `false` | no |
 | <a name="input_enable_jit_config"></a> [enable\_jit\_config](#input\_enable\_jit\_config) | Overwrite the default behavior for JIT configuration. By default JIT configuration is enabled for ephemeral runners and disabled for non-ephemeral runners. In case of GHES check first if the JIT config API is avaialbe. In case you upgradeing from 3.x to 4.x you can set `enable_jit_config` to `false` to avoid a breaking change when having your own AMI. | `bool` | `null` | no |
 | <a name="input_enable_job_queued_check"></a> [enable\_job\_queued\_check](#input\_enable\_job\_queued\_check) | Only scale if the job event received by the scale up lambda is in the queued state. By default enabled for non ephemeral runners and disabled for ephemeral. Set this variable to overwrite the default behavior. | `bool` | `null` | no |
 | <a name="input_enable_managed_runner_security_group"></a> [enable\_managed\_runner\_security\_group](#input\_enable\_managed\_runner\_security\_group) | Enables creation of the default managed security group. Unmanaged security groups can be specified via `runner_additional_security_group_ids`. | `bool` | `true` | no |
-| <a name="input_enable_metrics_control_plane"></a> [enable\_metrics\_control\_plane](#input\_enable\_metrics\_control\_plane) | (Experimental) Enable or disable the metrics for the module. Feature can change or renamed without a major release. | `bool` | `null` | no |
 | <a name="input_enable_organization_runners"></a> [enable\_organization\_runners](#input\_enable\_organization\_runners) | Register runners to organization, instead of repo level | `bool` | `false` | no |
 | <a name="input_enable_runner_binaries_syncer"></a> [enable\_runner\_binaries\_syncer](#input\_enable\_runner\_binaries\_syncer) | Option to disable the lambda to sync GitHub runner distribution, useful when using a pre-build AMI. | `bool` | `true` | no |
 | <a name="input_enable_runner_detailed_monitoring"></a> [enable\_runner\_detailed\_monitoring](#input\_enable\_runner\_detailed\_monitoring) | Should detailed monitoring be enabled for the runner. Set this to true if you want to use detailed monitoring. See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-cloudwatch-new.html for details. | `bool` | `false` | no |
@@ -156,7 +138,7 @@ Talk to the forestkeepers in the `runners-channel` on Slack.
 | <a name="input_enable_ssm_on_runners"></a> [enable\_ssm\_on\_runners](#input\_enable\_ssm\_on\_runners) | Enable to allow access to the runner instances for debugging purposes via SSM. Note that this adds additional permissions to the runner instances. | `bool` | `false` | no |
 | <a name="input_enable_user_data_debug_logging_runner"></a> [enable\_user\_data\_debug\_logging\_runner](#input\_enable\_user\_data\_debug\_logging\_runner) | Option to enable debug logging for user-data, this logs all secrets as well. | `bool` | `false` | no |
 | <a name="input_enable_userdata"></a> [enable\_userdata](#input\_enable\_userdata) | Should the userdata script be enabled for the runner. Set this to false if you are using your own prebuilt AMI. | `bool` | `true` | no |
-| <a name="input_enable_workflow_job_events_queue"></a> [enable\_workflow\_job\_events\_queue](#input\_enable\_workflow\_job\_events\_queue) | Enabling this experimental feature will create a secondory sqs queue to which a copy of the workflow\_job event will be delivered. | `bool` | `false` | no |
+| <a name="input_eventbridge"></a> [eventbridge](#input\_eventbridge) | Enable the use of EventBridge by the module. By enabling this feature events will be put on the EventBridge by the webhook instead of directly dispatching to queues for scaling.<br/><br/>    `enable`: Enable the EventBridge feature.<br/>    `accept_events`: List can be used to only allow specific events to be putted on the EventBridge. By default all events, empty list will be be interpreted as all events. | <pre>object({<br/>    enable        = optional(bool, true)<br/>    accept_events = optional(list(string), null)<br/>  })</pre> | `{}` | no |
 | <a name="input_ghes_ssl_verify"></a> [ghes\_ssl\_verify](#input\_ghes\_ssl\_verify) | GitHub Enterprise SSL verification. Set to 'false' when custom certificate (chains) is used for GitHub Enterprise Server (insecure). | `bool` | `true` | no |
 | <a name="input_ghes_url"></a> [ghes\_url](#input\_ghes\_url) | GitHub Enterprise Server URL. Example: https://github.internal.co - DO NOT SET IF USING PUBLIC GITHUB | `string` | `null` | no |
 | <a name="input_github_app"></a> [github\_app](#input\_github\_app) | GitHub app parameters, see your github app. Ensure the key is the base64-encoded `.pem` file (the output of `base64 app.private-key.pem`, not the content of `private-key.pem`). | <pre>object({<br/>    key_base64     = string<br/>    id             = string<br/>    webhook_secret = string<br/>  })</pre> | n/a | yes |
@@ -165,7 +147,7 @@ Talk to the forestkeepers in the `runners-channel` on Slack.
 | <a name="input_instance_max_spot_price"></a> [instance\_max\_spot\_price](#input\_instance\_max\_spot\_price) | Max price price for spot instances per hour. This variable will be passed to the create fleet as max spot price for the fleet. | `string` | `null` | no |
 | <a name="input_instance_profile_path"></a> [instance\_profile\_path](#input\_instance\_profile\_path) | The path that will be added to the instance\_profile, if not set the environment name will be used. | `string` | `null` | no |
 | <a name="input_instance_target_capacity_type"></a> [instance\_target\_capacity\_type](#input\_instance\_target\_capacity\_type) | Default lifecycle used for runner instances, can be either `spot` or `on-demand`. | `string` | `"spot"` | no |
-| <a name="input_instance_termination_watcher"></a> [instance\_termination\_watcher](#input\_instance\_termination\_watcher) | Configuration for the instance termination watcher. This feature is Beta, changes will not trigger a major release as long in beta.<br/><br/>`enable`: Enable or disable the spot termination watcher.<br/>'features': Enable or disable features of the termination watcher.<br/>`memory_size`: Memory size linit in MB of the lambda.<br/>`s3_key`: S3 key for syncer lambda function. Required if using S3 bucket to specify lambdas.<br/>`s3_object_version`: S3 object version for syncer lambda function. Useful if S3 versioning is enabled on source bucket.<br/>`timeout`: Time out of the lambda in seconds.<br/>`zip`: File location of the lambda zip file. | <pre>object({<br/>    enable        = optional(bool, false)<br/>    enable_metric = optional(string, null) # deprectaed<br/>    features = optional(object({<br/>      enable_spot_termination_handler              = optional(bool, true)<br/>      enable_spot_termination_notification_watcher = optional(bool, true)<br/>    }), {})<br/>    memory_size       = optional(number, null)<br/>    s3_key            = optional(string, null)<br/>    s3_object_version = optional(string, null)<br/>    timeout           = optional(number, null)<br/>    zip               = optional(string, null)<br/>  })</pre> | `{}` | no |
+| <a name="input_instance_termination_watcher"></a> [instance\_termination\_watcher](#input\_instance\_termination\_watcher) | Configuration for the instance termination watcher. This feature is Beta, changes will not trigger a major release as long in beta.<br/><br/>`enable`: Enable or disable the spot termination watcher.<br/>'features': Enable or disable features of the termination watcher.<br/>`memory_size`: Memory size linit in MB of the lambda.<br/>`s3_key`: S3 key for syncer lambda function. Required if using S3 bucket to specify lambdas.<br/>`s3_object_version`: S3 object version for syncer lambda function. Useful if S3 versioning is enabled on source bucket.<br/>`timeout`: Time out of the lambda in seconds.<br/>`zip`: File location of the lambda zip file. | <pre>object({<br/>    enable = optional(bool, false)<br/>    features = optional(object({<br/>      enable_spot_termination_handler              = optional(bool, true)<br/>      enable_spot_termination_notification_watcher = optional(bool, true)<br/>    }), {})<br/>    memory_size       = optional(number, null)<br/>    s3_key            = optional(string, null)<br/>    s3_object_version = optional(string, null)<br/>    timeout           = optional(number, null)<br/>    zip               = optional(string, null)<br/>  })</pre> | `{}` | no |
 | <a name="input_instance_types"></a> [instance\_types](#input\_instance\_types) | List of instance types for the action runner. Defaults are based on runner\_os (al2023 for linux and Windows Server Core for win). | `list(string)` | <pre>[<br/>  "m5.large",<br/>  "c5.large"<br/>]</pre> | no |
 | <a name="input_job_queue_retention_in_seconds"></a> [job\_queue\_retention\_in\_seconds](#input\_job\_queue\_retention\_in\_seconds) | The number of seconds the job is held in the queue before it is purged. | `number` | `86400` | no |
 | <a name="input_job_retry"></a> [job\_retry](#input\_job\_retry) | Experimental! Can be removed / changed without trigger a major release.Configure job retries. The configuration enables job retries (for ephemeral runners). After creating the insances a message will be published to a job retry queue. The job retry check lambda is checking after a delay if the job is queued. If not the message will be published again on the scale-up (build queue). Using this feature can impact the reate limit of the GitHub app.<br/><br/>`enable`: Enable or disable the job retry feature.<br/>`delay_in_seconds`: The delay in seconds before the job retry check lambda will check the job status.<br/>`delay_backoff`: The backoff factor for the delay.<br/>`lambda_memory_size`: Memory size limit in MB for the job retry check lambda.<br/>`lambda_timeout`: Time out of the job retry check lambda in seconds.<br/>`max_attempts`: The maximum number of attempts to retry the job. | <pre>object({<br/>    enable             = optional(bool, false)<br/>    delay_in_seconds   = optional(number, 300)<br/>    delay_backoff      = optional(number, 2)<br/>    lambda_memory_size = optional(number, 256)<br/>    lambda_timeout     = optional(number, 30)<br/>    max_attempts       = optional(number, 1)<br/>  })</pre> | `{}` | no |
@@ -173,18 +155,16 @@ Talk to the forestkeepers in the `runners-channel` on Slack.
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Optional CMK Key ARN to be used for Parameter Store. This key must be in the current account. | `string` | `null` | no |
 | <a name="input_lambda_architecture"></a> [lambda\_architecture](#input\_lambda\_architecture) | AWS Lambda architecture. Lambda functions using Graviton processors ('arm64') tend to have better price/performance than 'x86\_64' functions. | `string` | `"arm64"` | no |
 | <a name="input_lambda_principals"></a> [lambda\_principals](#input\_lambda\_principals) | (Optional) add extra principals to the role created for execution of the lambda, e.g. for local testing. | <pre>list(object({<br/>    type        = string<br/>    identifiers = list(string)<br/>  }))</pre> | `[]` | no |
-| <a name="input_lambda_runtime"></a> [lambda\_runtime](#input\_lambda\_runtime) | AWS Lambda runtime. | `string` | `"nodejs20.x"` | no |
+| <a name="input_lambda_runtime"></a> [lambda\_runtime](#input\_lambda\_runtime) | AWS Lambda runtime. | `string` | `"nodejs22.x"` | no |
 | <a name="input_lambda_s3_bucket"></a> [lambda\_s3\_bucket](#input\_lambda\_s3\_bucket) | S3 bucket from which to specify lambda functions. This is an alternative to providing local files directly. | `string` | `null` | no |
 | <a name="input_lambda_security_group_ids"></a> [lambda\_security\_group\_ids](#input\_lambda\_security\_group\_ids) | List of security group IDs associated with the Lambda function. | `list(string)` | `[]` | no |
 | <a name="input_lambda_subnet_ids"></a> [lambda\_subnet\_ids](#input\_lambda\_subnet\_ids) | List of subnets in which the action runners will be launched, the subnets needs to be subnets in the `vpc_id`. | `list(string)` | `[]` | no |
 | <a name="input_lambda_tags"></a> [lambda\_tags](#input\_lambda\_tags) | Map of tags that will be added to all the lambda function resources. Note these are additional tags to the default tags. | `map(string)` | `{}` | no |
-| <a name="input_lambda_tracing_mode"></a> [lambda\_tracing\_mode](#input\_lambda\_tracing\_mode) | DEPRECATED: Replaced by `tracing_config`. | `string` | `null` | no |
 | <a name="input_log_level"></a> [log\_level](#input\_log\_level) | Logging level for lambda logging. Valid values are  'silly', 'trace', 'debug', 'info', 'warn', 'error', 'fatal'. | `string` | `"info"` | no |
 | <a name="input_logging_kms_key_id"></a> [logging\_kms\_key\_id](#input\_logging\_kms\_key\_id) | Specifies the kms key id to encrypt the logs with. | `string` | `null` | no |
 | <a name="input_logging_retention_in_days"></a> [logging\_retention\_in\_days](#input\_logging\_retention\_in\_days) | Specifies the number of days you want to retain log events for the lambda log group. Possible values are: 0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653. | `number` | `180` | no |
 | <a name="input_matcher_config_parameter_store_tier"></a> [matcher\_config\_parameter\_store\_tier](#input\_matcher\_config\_parameter\_store\_tier) | The tier of the parameter store for the matcher configuration. Valid values are `Standard`, and `Advanced`. | `string` | `"Standard"` | no |
 | <a name="input_metrics"></a> [metrics](#input\_metrics) | Configuration for metrics created by the module, by default disabled to avoid additional costs. When metrics are enable all metrics are created unless explicit configured otherwise. | <pre>object({<br/>    enable    = optional(bool, false)<br/>    namespace = optional(string, "GitHub Runners")<br/>    metric = optional(object({<br/>      enable_github_app_rate_limit    = optional(bool, true)<br/>      enable_job_retry                = optional(bool, true)<br/>      enable_spot_termination_warning = optional(bool, true)<br/>    }), {})<br/>  })</pre> | `{}` | no |
-| <a name="input_metrics_namespace"></a> [metrics\_namespace](#input\_metrics\_namespace) | The namespace for the metrics created by the module. Merics will only be created if explicit enabled. | `string` | `null` | no |
 | <a name="input_minimum_running_time_in_minutes"></a> [minimum\_running\_time\_in\_minutes](#input\_minimum\_running\_time\_in\_minutes) | The time an ec2 action runner should be running at minimum before terminated, if not busy. | `number` | `null` | no |
 | <a name="input_pool_config"></a> [pool\_config](#input\_pool\_config) | The configuration for updating the pool. The `pool_size` to adjust to by the events triggered by the `schedule_expression`. For example you can configure a cron expression for weekdays to adjust the pool to 10 and another expression for the weekend to adjust the pool to 1. Use `schedule_expression_timezone` to override the schedule time zone (defaults to UTC). | <pre>list(object({<br/>    schedule_expression          = string<br/>    schedule_expression_timezone = optional(string)<br/>    size                         = number<br/>  }))</pre> | `[]` | no |
 | <a name="input_pool_lambda_memory_size"></a> [pool\_lambda\_memory\_size](#input\_pool\_lambda\_memory\_size) | Memory size limit for scale-up lambda. | `number` | `512` | no |
@@ -209,10 +189,13 @@ Talk to the forestkeepers in the `runners-channel` on Slack.
 | <a name="input_runner_binaries_syncer_lambda_zip"></a> [runner\_binaries\_syncer\_lambda\_zip](#input\_runner\_binaries\_syncer\_lambda\_zip) | File location of the binaries sync lambda zip file. | `string` | `null` | no |
 | <a name="input_runner_boot_time_in_minutes"></a> [runner\_boot\_time\_in\_minutes](#input\_runner\_boot\_time\_in\_minutes) | The minimum time for an EC2 runner to boot and register as a runner. | `number` | `5` | no |
 | <a name="input_runner_credit_specification"></a> [runner\_credit\_specification](#input\_runner\_credit\_specification) | The credit option for CPU usage of a T instance. Can be unset, "standard" or "unlimited". | `string` | `null` | no |
+| <a name="input_runner_disable_default_labels"></a> [runner\_disable\_default\_labels](#input\_runner\_disable\_default\_labels) | Disable default labels for the runners (os, architecture and `self-hosted`). If enabled, the runner will only have the extra labels provided in `runner_extra_labels`. In case you on own start script is used, this configuration parameter needs to be parsed via SSM. | `bool` | `false` | no |
 | <a name="input_runner_ec2_tags"></a> [runner\_ec2\_tags](#input\_runner\_ec2\_tags) | Map of tags that will be added to the launch template instance tag specifications. | `map(string)` | `{}` | no |
 | <a name="input_runner_egress_rules"></a> [runner\_egress\_rules](#input\_runner\_egress\_rules) | List of egress rules for the GitHub runner instances. | <pre>list(object({<br/>    cidr_blocks      = list(string)<br/>    ipv6_cidr_blocks = list(string)<br/>    prefix_list_ids  = list(string)<br/>    from_port        = number<br/>    protocol         = string<br/>    security_groups  = list(string)<br/>    self             = bool<br/>    to_port          = number<br/>    description      = string<br/>  }))</pre> | <pre>[<br/>  {<br/>    "cidr_blocks": [<br/>      "0.0.0.0/0"<br/>    ],<br/>    "description": null,<br/>    "from_port": 0,<br/>    "ipv6_cidr_blocks": [<br/>      "::/0"<br/>    ],<br/>    "prefix_list_ids": null,<br/>    "protocol": "-1",<br/>    "security_groups": null,<br/>    "self": null,<br/>    "to_port": 0<br/>  }<br/>]</pre> | no |
-| <a name="input_runner_extra_labels"></a> [runner\_extra\_labels](#input\_runner\_extra\_labels) | Extra (custom) labels for the runners (GitHub). Labels checks on the webhook can be enforced by setting `enable_runner_workflow_job_labels_check_all`. GitHub read-only labels should not be provided. | `list(string)` | `[]` | no |
+| <a name="input_runner_extra_labels"></a> [runner\_extra\_labels](#input\_runner\_extra\_labels) | Extra (custom) labels for the runners (GitHub). Separate each label by a comma. Labels checks on the webhook can be enforced by setting `enable_workflow_job_labels_check`. GitHub read-only labels should not be provided. | `list(string)` | `[]` | no |
 | <a name="input_runner_group_name"></a> [runner\_group\_name](#input\_runner\_group\_name) | Name of the runner group. | `string` | `"Default"` | no |
+| <a name="input_runner_hook_job_completed"></a> [runner\_hook\_job\_completed](#input\_runner\_hook\_job\_completed) | Script to be ran in the runner environment at the end of every job | `string` | `""` | no |
+| <a name="input_runner_hook_job_started"></a> [runner\_hook\_job\_started](#input\_runner\_hook\_job\_started) | Script to be ran in the runner environment at the beginning of every job | `string` | `""` | no |
 | <a name="input_runner_iam_role_managed_policy_arns"></a> [runner\_iam\_role\_managed\_policy\_arns](#input\_runner\_iam\_role\_managed\_policy\_arns) | Attach AWS or customer-managed IAM policies (by ARN) to the runner IAM role | `list(string)` | `[]` | no |
 | <a name="input_runner_log_files"></a> [runner\_log\_files](#input\_runner\_log\_files) | (optional) Replaces the module default cloudwatch log config. See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-Configuration-File-Details.html for details. | <pre>list(object({<br/>    log_group_name   = string<br/>    prefix_log_group = bool<br/>    file_path        = string<br/>    log_stream_name  = string<br/>  }))</pre> | `null` | no |
 | <a name="input_runner_metadata_options"></a> [runner\_metadata\_options](#input\_runner\_metadata\_options) | Metadata options for the ec2 runner instances. By default, the module uses metadata tags for bootstrapping the runner, only disable `instance_metadata_tags` when using custom scripts for starting the runner. | `map(any)` | <pre>{<br/>  "http_endpoint": "enabled",<br/>  "http_put_response_hop_limit": 1,<br/>  "http_tokens": "required",<br/>  "instance_metadata_tags": "enabled"<br/>}</pre> | no |
@@ -226,7 +209,6 @@ Talk to the forestkeepers in the `runners-channel` on Slack.
 | <a name="input_runners_maximum_count"></a> [runners\_maximum\_count](#input\_runners\_maximum\_count) | The maximum number of runners that will be created. | `number` | `3` | no |
 | <a name="input_runners_scale_down_lambda_memory_size"></a> [runners\_scale\_down\_lambda\_memory\_size](#input\_runners\_scale\_down\_lambda\_memory\_size) | Memory size limit in MB for scale-down lambda. | `number` | `512` | no |
 | <a name="input_runners_scale_down_lambda_timeout"></a> [runners\_scale\_down\_lambda\_timeout](#input\_runners\_scale\_down\_lambda\_timeout) | Time out for the scale down lambda in seconds. | `number` | `60` | no |
-| <a name="input_runners_scale_up_Lambda_memory_size"></a> [runners\_scale\_up\_Lambda\_memory\_size](#input\_runners\_scale\_up\_Lambda\_memory\_size) | Memory size limit in MB for scale-up lambda. | `number` | `null` | no |
 | <a name="input_runners_scale_up_lambda_memory_size"></a> [runners\_scale\_up\_lambda\_memory\_size](#input\_runners\_scale\_up\_lambda\_memory\_size) | Memory size limit in MB for scale-up lambda. | `number` | `512` | no |
 | <a name="input_runners_scale_up_lambda_timeout"></a> [runners\_scale\_up\_lambda\_timeout](#input\_runners\_scale\_up\_lambda\_timeout) | Time out for the scale up lambda in seconds. | `number` | `30` | no |
 | <a name="input_runners_ssm_housekeeper"></a> [runners\_ssm\_housekeeper](#input\_runners\_ssm\_housekeeper) | Configuration for the SSM housekeeper lambda. This lambda deletes token / JIT config from SSM.<br/><br/>  `schedule_expression`: is used to configure the schedule for the lambda.<br/>  `enabled`: enable or disable the lambda trigger via the EventBridge.<br/>  `lambda_memory_size`: lambda memery size limit.<br/>  `lambda_timeout`: timeout for the lambda in seconds.<br/>  `config`: configuration for the lambda function. Token path will be read by default from the module. | <pre>object({<br/>    schedule_expression = optional(string, "rate(1 day)")<br/>    enabled             = optional(bool, true)<br/>    lambda_memory_size  = optional(number, 512)<br/>    lambda_timeout      = optional(number, 60)<br/>    config = object({<br/>      tokenPath      = optional(string)<br/>      minimumDaysOld = optional(number, 1)<br/>      dryRun         = optional(bool, false)<br/>    })<br/>  })</pre> | <pre>{<br/>  "config": {}<br/>}</pre> | no |
@@ -234,7 +216,7 @@ Talk to the forestkeepers in the `runners-channel` on Slack.
 | <a name="input_scale_up_reserved_concurrent_executions"></a> [scale\_up\_reserved\_concurrent\_executions](#input\_scale\_up\_reserved\_concurrent\_executions) | Amount of reserved concurrent executions for the scale-up lambda function. A value of 0 disables lambda from being triggered and -1 removes any concurrency limitations. | `number` | `1` | no |
 | <a name="input_ssm_paths"></a> [ssm\_paths](#input\_ssm\_paths) | The root path used in SSM to store configuration and secrets. | <pre>object({<br/>    root       = optional(string, "github-action-runners")<br/>    app        = optional(string, "app")<br/>    runners    = optional(string, "runners")<br/>    webhook    = optional(string, "webhook")<br/>    use_prefix = optional(bool, true)<br/>  })</pre> | `{}` | no |
 | <a name="input_state_event_rule_binaries_syncer"></a> [state\_event\_rule\_binaries\_syncer](#input\_state\_event\_rule\_binaries\_syncer) | Option to disable EventBridge Lambda trigger for the binary syncer, useful to stop automatic updates of binary distribution | `string` | `"ENABLED"` | no |
-| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of subnets in which the action runner instances will be launched. The subnets need to exist in the configured VPC (`vpc_id`), and must reside in different availability zones (see https://github.com/philips-labs/terraform-aws-github-runner/issues/2904) | `list(string)` | n/a | yes |
+| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of subnets in which the action runner instances will be launched. The subnets need to exist in the configured VPC (`vpc_id`), and must reside in different availability zones (see https://github.com/github-aws-runners/terraform-aws-github-runner/issues/2904) | `list(string)` | n/a | yes |
 | <a name="input_syncer_lambda_s3_key"></a> [syncer\_lambda\_s3\_key](#input\_syncer\_lambda\_s3\_key) | S3 key for syncer lambda function. Required if using an S3 bucket to specify lambdas. | `string` | `null` | no |
 | <a name="input_syncer_lambda_s3_object_version"></a> [syncer\_lambda\_s3\_object\_version](#input\_syncer\_lambda\_s3\_object\_version) | S3 object version for syncer lambda function. Useful if S3 versioning is enabled on source bucket. | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Map of tags that will be added to created resources. By default resources will be tagged with name and environment. | `map(string)` | `{}` | no |
@@ -250,7 +232,6 @@ Talk to the forestkeepers in the `runners-channel` on Slack.
 | <a name="input_webhook_lambda_s3_object_version"></a> [webhook\_lambda\_s3\_object\_version](#input\_webhook\_lambda\_s3\_object\_version) | S3 object version for webhook lambda function. Useful if S3 versioning is enabled on source bucket. | `string` | `null` | no |
 | <a name="input_webhook_lambda_timeout"></a> [webhook\_lambda\_timeout](#input\_webhook\_lambda\_timeout) | Time out of the webhook lambda in seconds. | `number` | `10` | no |
 | <a name="input_webhook_lambda_zip"></a> [webhook\_lambda\_zip](#input\_webhook\_lambda\_zip) | File location of the webhook lambda zip file. | `string` | `null` | no |
-| <a name="input_workflow_job_queue_configuration"></a> [workflow\_job\_queue\_configuration](#input\_workflow\_job\_queue\_configuration) | Configuration options for workflow job queue which is only applicable if the flag enable\_workflow\_job\_events\_queue is set to true. | <pre>object({<br/>    delay_seconds              = number<br/>    visibility_timeout_seconds = number<br/>    message_retention_seconds  = number<br/>  })</pre> | <pre>{<br/>  "delay_seconds": null,<br/>  "message_retention_seconds": null,<br/>  "visibility_timeout_seconds": null<br/>}</pre> | no |
 
 ## Outputs
 
