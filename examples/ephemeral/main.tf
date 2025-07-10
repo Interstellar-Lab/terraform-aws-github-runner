@@ -63,7 +63,7 @@ module "runners" {
     device_name           = "/dev/sda1"
     delete_on_termination = true
     volume_type           = "gp3"
-    volume_size           = 30
+    volume_size           = 50
     iops                  = null
   }]
 
