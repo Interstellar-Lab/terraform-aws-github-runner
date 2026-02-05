@@ -106,7 +106,7 @@ module "runners" {
 
   # configure your pre-built AMI
   enable_userdata = false
-  ami_filter      = { name = ["github-runner-ubuntu-jammy-amd64-*"], state = ["available"] }
+  ami_filter      = { name = ["github-runner-ubuntu-noble-amd64-*"], state = ["available"] }
   ami_owners      = ["682864570400"]
 
   # or use the default AMI
