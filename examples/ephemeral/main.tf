@@ -14,6 +14,18 @@ module "base" {
   aws_region = local.aws_region
 }
 
+module "s3_cache" {
+  source = "./s3_cache"
+
+  config = {
+    aws_region       = local.aws_region
+    prefix           = local.environment
+    runner_role_arns = [module.runners.runners.role_runner.arn]
+    tags             = { Project = "IL-AWS-Runners" }
+    vpc_id           = module.base.vpc.vpc_id
+  }
+}
+
 module "runners" {
   source                          = "../../"
   create_service_linked_role_spot = true
@@ -23,7 +35,7 @@ module "runners" {
 
   prefix = local.environment
   tags = {
-    Project = "ProjectX"
+    Project = "IL-AWS-Runners"
   }
 
   github_app = {
@@ -36,20 +48,31 @@ module "runners" {
   # Alternatively you can set the path to the lambda zip files here.
   #
   # For example grab zip files via lambda_download
-  # webhook_lambda_zip                = "../lambdas-download/webhook.zip"
-  # runner_binaries_syncer_lambda_zip = "../lambdas-download/runner-binaries-syncer.zip"
-  # runners_lambda_zip                = "../lambdas-download/runners.zip"
+  webhook_lambda_zip                = "../lambdas-download/webhook.zip"
+  runner_binaries_syncer_lambda_zip = "../lambdas-download/runner-binaries-syncer.zip"
+  runners_lambda_zip                = "../lambdas-download/runners.zip"
 
   enable_organization_runners = true
-  runner_extra_labels         = ["default", "example"]
+  runner_extra_labels         = ["ephemeral"]
 
   # enable access to the runners via SSM
   enable_ssm_on_runners = true
 
+
+  block_device_mappings = [{
+    device_name           = "/dev/sda1"
+    delete_on_termination = true
+    volume_type           = "gp3"
+    volume_size           = 50
+    iops                  = null
+  }]
+
+  runner_run_as = "ubuntu"
+
   # Let the module manage the service linked role
   # create_service_linked_role_spot = true
 
-  instance_types = ["m5.large", "c5.large"]
+  instance_types = ["m7a.xlarge", "c7a.xlarge"]
 
   # override delay of events in seconds
   delay_webhook_event = 0
@@ -82,11 +105,11 @@ module "runners" {
 
 
   # configure your pre-built AMI
-  # enable_userdata = false
-  # ami = {
-  #   filter = { name = ["github-runner-al2023-x86_64-*"], state = ["available"] }
-  #   owners = [data.aws_caller_identity.current.account_id]
-  # }
+  enable_userdata = false
+  ami = {
+    filter = { name = ["github-runner-ubuntu-noble-amd64-*"], state = ["available"] }
+    owners = ["682864570400"]
+  }
 
   # or use the default AMI
   # enable_userdata = true
@@ -94,7 +117,7 @@ module "runners" {
   # Enable debug logging for the lambda functions
   # log_level = "debug"
 
-  # Setup a dead letter queue, by default scale up lambda will keep retrying to process event in case of scaling error.
+  # Setup a dead letter queue, by default scale up lambda will kepp retrying to process event in case of scaling error.
   # redrive_policy_build_queue = {
   #   enabled             = true
   #   maxReceiveCount     = 50 # 50 retries every 30 seconds => 25 minutes
