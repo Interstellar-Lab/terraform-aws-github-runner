@@ -9,7 +9,7 @@ packer {
 
 variable "runner_version" {
   description = "The version (no v prefix) of the runner software to install https://github.com/actions/runner/releases. The latest release will be fetched from GitHub if not provided."
-  default     = "2.335.1"
+  default     = "2.336.0"
 }
 
 variable "region" {
