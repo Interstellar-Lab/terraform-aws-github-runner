@@ -20,7 +20,7 @@ module "s3_cache" {
   config = {
     aws_region       = local.aws_region
     prefix           = local.environment
-    runner_role_arns = [module.runners.runners.role_runner.arn]
+    runner_role_arns = [module.runners.runners.role_runner[0].arn]
     tags             = { Project = "IL-AWS-Runners" }
     vpc_id           = module.base.vpc.vpc_id
   }
